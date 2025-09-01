@@ -1,101 +1,165 @@
-Mining Software Repository: 
+# Mining Software Repository Study
 
 This repository contains the results and analysis of a comprehensive three-week study investigating software development practices through repository mining techniques. 
 Our research explores Self-Admitted Technical Debt (SATD), pull request dynamics, and code readability across multiple open-source projects, providing insights into development decision-making processes and their impact on code quality.
 
+## Study Overview
 
-Our research was conducted over three weeks, with each week focusing on a different aspect of software development:
+• **Duration**: 3 weeks of intensive analysis
 
-Week 1: Self-Admitted Technical Debt (SATD) analysis
+• **Focus Areas**: Technical debt acknowledgment, collaboration patterns, and code quality evolution
 
-Week 2: Pull request dynamics and merge prediction
+• **Repositories Analyzed**: Eclipse, Chromium OS, ArgoUML, Apache projects, JBoss, Netflix Falcor, Google Java projects
 
-Week 3: Code readability investigation and improvement patterns
+• **Data Scale**: 12,968 methods, 5,312 commits, 1,002 pull requests, 17,630 readability assessments
+
+## Research Questions 
+
+### Week 1: Self-Admitted Technical Debt (SATD) Analysis
+
+#### Research Questions:
+
+• **RQ1**: Does SATD in code comments correlate with high code complexity?
+
+• **RQ2**: Does SATD in commit messages correlate with high code complexity?  
+
+• **RQ3**: Do different SATD categories exhibit varying relationships with complexity?
+
+#### Results:
+
+• **Strong correlation found**: Methods with SATD showed +2.14 mean complexity increase vs -0.87 for non-SATD methods
+
+• **Statistical significance**: Mann-Whitney U test confirmed p < 0.001 with medium effect size (0.56)
+
+• **Category-specific patterns**: Design Debt showed strongest correlation with complexity increases (+2.3), while Documentation Debt had minimal impact (-0.4)
+
+• **Commit-level analysis**: Less pronounced relationship at broader commit level (p = 0.078)
+
+### Week 2: Pull Request Analysis
+
+#### Research Questions:
+
+• **RQ1**: What are the primary reasons for pull request changes?
+
+• **RQ2**: Can we predict pull request merge outcomes?
+
+• **RQ3**: How do different review comment types affect merge probability?
+
+#### Results:
+
+• **Primary change drivers**: Failing tests (18.5%), logic errors (13.0%), and merge conflicts (13.0%)
+
+• **Prediction accuracy**: Random Forest model achieved 89% overall accuracy with 0.74 ROC curve
+
+• **High sensitivity**: 98.27% accuracy for predicting merged PRs (170/173 correct)
+
+• **Comment type impact**: Review-oriented comments achieved 100% merge rate, while issue-focused comments had 66.8% success rate
+
+• **Key predictive features**: Title length (0.257), total comments (0.139), issue comments (0.121)
+
+### Week 3: Code Readability Investigation
+
+#### Research Questions:
+
+• **RQ1**: Do developers deliberately improve readability?
+
+• **RQ2**: Can we predict readability improvements from commit messages?
+
+• **RQ3**: How does commit size impact readability outcomes?
+
+#### Results:
+
+• **Deliberate improvement**: ~15% of commits contained explicit readability keywords with statistically significant better outcomes
+
+• **Predictive modeling**: 67% accuracy achieved using commit message text features
+
+• **Cross-project patterns**: Models performed better across repositories than within single projects
+
+• **Commit size effect**: Single-file commits achieved highest success rate (42.7%), while few-files commits had lowest (26.0%)
+
+• **Common improvement terms**: "format," "simplifi," "renam," "javadoc" strongly associated with readability gains
+
+## Tools and Technologies
+
+### Data Mining & Analysis:
+
+• **PyDriller**: Repository commit analysis and metadata extraction
+
+• **Lizard**: Cyclomatic complexity measurement
+
+• **GitHub API**: Pull request data extraction and processing
+
+• **University of Molise Readability Tool**: Java code readability assessment
+
+### Machine Learning & Statistics:
+
+• **Python Libraries**: pandas, scikit-learn, numpy, matplotlib, seaborn
+
+• **Models**: Random Forest classifiers for prediction tasks
+
+• **Statistical Tests**: Mann-Whitney U tests, Shapiro-Wilk normality tests
+
+• **NLP Techniques**: TF-IDF vectorization, text preprocessing for commit message analysis
+
+### Repositories Analyzed:
+
+• **Apache Projects**: Commons-Net, Phoenix, Zookeeper, Tapestry-5, Calcite
+
+• **Google Java**: Gson, Guice, Truth
+
+• **GitHub Projects**: JBoss Parent POM, Eclipse Xpect, Netflix Falcor
+
+## Statistical Methodology
 
 
-Week1 :Self-Admitted Technical Debt Analysis
+• **Sample Sizes**: 12,968 methods analyzed for complexity, 1,002 pull requests (860 merged, 142 non-merged)
 
-The first week, we focused on Self Admitted Technical Debt(SATD)- defined as instances where developers write comments admittng their code is not good quality. It happens when developers know they wrote poor code and leave comments saying it needs to be fixed later. This research analyzed SATD examples from software projects like Eclipse, Chromium OS, ArgoUML, and Apache, where developers wrote comments such as  "//TODO this is such a hack" or "//FIXME: This is a gross hack." These comments represent developers' honest admissions that they're taking shortcuts due to time constraints or other pressures.
+• **Validation Approaches**: Cross-project and within-project model evaluation
 
-Research questions : 
+• **Effect Size Calculations**: Practical significance assessment beyond statistical significance
 
-RQ1: Does SATD in Code Comments Correlate with High Code Complexity?
+• **Normality Testing**: Shapiro-Wilk tests to determine appropriate statistical methods
 
-To answering this question, we searched through source code files to identify methods containing SATD, calculated  cyclomatic complexity for each of these methods by counting their decision points and execution paths, and then compared the average complexity scores of SATD-containing methods against methods without any SATD comments to determine if developers tend to acknowledge technical debt in more complex code sections.
+• **Multi-dimensional Analysis**: Five readability dimensions (structure, visual, naming, comments, complexity)
 
-RQ2: Does SATD in Commit Messages Correlate with High Code Complexity?
+## Main Conclusions
 
-For this reseach question, we analyzed the project's Git commit history to identify commits where developersmentioned technical debt in their commit messages (such as 'quick hack for now' or 'temporary workaround'), examined the actual code changes made in those commits to calculate the cyclomatic complexity of the modified methods, and then performed a comparative statistical analysis between the complexity of code changes in SATD-related commits versus regular commits to see if developers tend to introduce or modify more complex code when they're consciously taking on technical debt.
+### Technical Debt Insights:
 
-RQ3: our Own Question - Categories of SATD
+• **Awareness correlation**: Developers acknowledge technical debt in more complex code sections
 
-In our custom research question, we designed a study to investigate whether different categories of self-admitted technical debt exhibit varying relationships with code complexity by first developing a classification system to label SATD instances into predefined categories (such as design debt, defect debt, or documentation debt), applying this categorization to the SATD comments and commits I had identified, and then analyzing whether certain types of technical debt are more strongly associated with high complexity code than others, providing insights into which kinds of shortcuts developers take in different complexity scenarios. 
+• **Category differences**: Design debt most strongly associated with complexity increases
 
-Finally, we conducted statistical comparisons between the complexity distributions of SATD-containing methods versus non-SATD control groups to determine whether developers' self-acknowledged technical debt correlates with measurable code quality metrics. This approach enabled us to empirically test our research questions about the relationship between developer awareness of suboptimal solutions and actual code complexity.
+• **Method-level vs commit-level**: Individual method patterns more pronounced than broad commit patterns
 
-Week 2: Pull Request Analysis
+### Collaboration Patterns:
 
-In the second week, we shifted our focus to understanding pull request dynamics across different repositories. We wanted to understand what causes developers to request changes in pull requests, whether we can predict if a pull request will be merged, and how different types of review comments affect the merge outcome.
+• **Predictable outcomes**: Pull request success can be forecasted with reasonable accuracy
 
-Research Questions:
+• **Communication impact**: Review comment types significantly influence merge probability
 
-RQ1: What are the reasons for changes in pull requests?
+• **Quality indicators**: Title length and comment volume serve as merge predictors
 
-We investigated the primary factors driving modification requests in pull requests across different software repositories by manually reviewing and categorizing comments from 100 pull requests, then using automated analysis to scale our findings across entire datasets.
+### Code Quality Evolution:
 
-RQ2: Can we predict whether a pull request will be merged?
+• **Intentional improvement**: Explicit readability mentions correlate with better outcomes
 
-We developed a machine learning model to forecast the likelihood of a pull request being accepted and merged based on various features like title length, number of comments, and other metadata characteristics.
+• **Size matters**: Smaller commits more successful at improving readability
 
-RQ3: How do different types of review comments affect pull request merges?
+• **Cross-project consistency**: Readability improvement patterns transcend individual repositories
 
-We analyzed the impact of various review comment types on the probability of pull request acceptance by categorizing comments and examining their correlation with successful merges.
+## Team
 
-We analyzed pull request data from three diverse repositories: JBoss Parent POM, Eclipse Xpect, and Netflix Falcor, examining a total of 1,002 pull requests (860 merged and 142 non-merged). Our approach combined both qualitative examination through manual review of comments and quantitative techniques using machine learning and statistical analysis.
 
-Week 3: Code Readability Investigation
+• **Mahdieh Ahmadi** - University of Passau (ahmadi13@ads.uni-passau.de)
 
-In the third week, we investigated code readability patterns across Google's Java repositories (Gson, Guice, and Truth) to understand whether developers deliberately improve readability, if we can predict readability improvements, and how commit size affects readability outcomes.
+• **Erfan Mollasalehi** - University of Passau (mollas01@ads.uni-passau.de)  
 
-Research Questions:
+• **Zahra Borzoo** - University of Passau (borzoo01@ads.uni-passau.de)
 
-RQ1: Do developers increase readability deliberately?
+## Acknowledgments
 
-We examined whether developers consciously attempt to improve code readability by analyzing commit messages for explicit readability improvement keywords and comparing the outcomes of these intentional efforts.
 
-RQ2: Can we predict whether the readability of a file will be improved?
+• Special thanks to **Prof. Dr. Steffen Herbold** and course instructors for continuous guidance
 
-We developed machine learning models to predict readability improvements based on commit message text features, testing both cross-project and within-project approaches.
-
-RQ3: Do larger commits (with more changed files) impact readability differently than smaller ones?
-
-We investigated whether the size of commits (measured by number of files changed) affects readability outcomes by categorizing commits into different size groups and analyzing their success rates.
-
-We used PyDriller to extract commit data and the University of Molise Java readability tool to evaluate source code across five dimensions: structural metrics, visual arrangement, naming conventions, comment quality, and complexity patterns. For text analysis of commit messages, we applied standard NLP preprocessing and developed a keyword dictionary covering nine readability-related categories.
-
-Tools and Technologies Used:
-
-Throughout this three-week study, we employed various tools and libraries:
-
-PyDriller for commit and repository analysis
-
-Lizard for cyclomatic complexity measurement
-
-GitHub API for pull request data extraction
-
-University of Molise Readability Tool for Java code readability assessment
-
-Python libraries: pandas, scikit-learn, numpy, matplotlib, seaborn for data analysis and machine learning
-
-Statistical tools: Mann-Whitney U tests, Shapiro-Wilk normality tests for hypothesis testing
-NLP techniques: TF-IDF vectorization, text preprocessing for commit message analysis
-
-Main Conclusions:
-
-This three-week investigation provided valuable insights into software development practices:
-
-Technical debt acknowledgment correlates with complexity: Developers do tend to acknowledge technical debt in more complex code sections, suggesting they're aware of quality issues when they arise.
-
-Pull request patterns are predictable: We can predict merge outcomes with reasonable accuracy, and the type of review comments significantly impacts merge success.
-
-Readability improvements can be predicted: Developers who explicitly mention readability improvements in their commit messages are more likely to actually improve readability, and smaller commits tend to be more successful at improving readability.
+• University of Passau AI Engineering department for research support
